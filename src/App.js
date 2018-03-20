@@ -1,18 +1,54 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+
 import './App.css';
+import { steps } from './common/steps';
+import Step from './components/step/Step';
 
 class App extends Component {
+  
+  handleUpload = (event) => {
+      let files = event.target.files;
+      console.log('File is => ', files[0]);
+      let formData = new FormData();
+      formData.append("file", files[0]);
+      console.log('FORM: ', formData.keys());
+ 
+      /*const headers = new Headers({
+          "Content-Type": "multipart/form-data; charset=utf-8;",
+          "Cache-Control": "no-cache"
+      });*/
+    
+      let request = new Request('http://localhost:8080/verify', {
+          method: 'POST',
+          mode: 'cors',
+          body: formData
+      });
+    
+      fetch(request)
+          .then(function(res) {
+              console.log('response: ', res);
+          }).catch(function(err) {
+          console.log('err: ', err);
+      });
+  }
+  
+
   render() {
+      const appSteps = steps.map((obj, i) => (
+          <div key={i}>
+              <Step title={obj.title} step={obj.step}
+                    handleUpload={this.handleUpload}
+                    handleVerify={this.handleVerify} />
+          </div>
+      ));
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
+          <p className="App-title">Reads file from the source, validates with Node and can be uploaded to Google Drive.</p>
         </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div className='app-body'>
+            { appSteps }
+        </div>
       </div>
     );
   }
