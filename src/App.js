@@ -8,10 +8,8 @@ class App extends Component {
   
   handleUpload = (event) => {
       let files = event.target.files;
-      console.log('File is => ', files[0]);
       let formData = new FormData();
       formData.append("file", files[0]);
-      console.log('FORM: ', formData.keys());
  
       /*const headers = new Headers({
           "Content-Type": "multipart/form-data; charset=utf-8;",
@@ -25,9 +23,17 @@ class App extends Component {
       });
     
       fetch(request)
-          .then(function(res) {
+          .then(res => {
               console.log('response: ', res);
-          }).catch(function(err) {
+              if (res.status === 200) {
+                  fetch(`http://localhost:8080/file/${files[0].name}`)
+                    .then(res => {
+                        console.log('Fetch res: ', res);
+                  }).catch(err => {
+                      console.log('Fetch error: ', err);
+                  });
+              }
+          }).catch(err => {
           console.log('err: ', err);
       });
   }
