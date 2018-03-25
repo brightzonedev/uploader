@@ -5,6 +5,6 @@ export const steps = [
     },
     {
         step: 2,
-        title: 'Save to drive',
+        title: 'Save to dropbox',
     },
 ];
